@@ -307,17 +307,23 @@
     // so that they'll remain available to the newly-generated function every
     // time it's called.
     var alreadyCalled = false;
+    // object with previous answers
+
     var result;
 
     // TIP: We'll return a new function that delegates to the old one, but only
     // if it hasn't been called before.
     return function() {
-      if (!alreadyCalled) {
+      if (!alreadyCalled) {  // if the answer isn't aready stored in object, then run
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
         // infromation from one function call to another.
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
+
+      // it isnt stored in object
+      //run the function
+      //store result in object
       // The new function always returns the originally computed result.
       return result;
     };
@@ -332,7 +338,25 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var resultsObject = {};
+
+    return function () {
+      var strungFunc = JSON.stringify(arguments);
+      if (resultsObject[strungFunc] !== undefined) {
+        return resultsObject[strungFunc];
+      } else {
+        //var returnVal = func(...arguments); 
+        var returnVal = func.apply(this, arguments);
+        resultsObject[strungFunc] = returnVal;
+        return returnVal;
+      }
+
+    };
+
   };
+
+
+
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -341,6 +365,7 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    return setTimeout.apply(this, arguments);
   };
 
 
@@ -355,6 +380,34 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var shuffleArray = array.slice();
+    var returnArray = [];
+    console.log('start of test');
+    console.log('this is the shuffle array')
+
+
+    // for (var i = 0; i < array.length; i++) {
+    //   console.log('in the for loop, shuffle arrray bellow');
+    //   console.log(shuffleArray);
+    //   //how do we generate a random number between zero and length - 1?
+    //   //push value from shuffleArray to returnArray
+    //   var randomIndex = Math.floor(Math.random() * (shuffleArray.length));
+    //   var randomElement = shuffleArray[randomIndex];
+    //   console.log('this is the random index');
+    //   console.log(randomIndex);
+    //   returnArray.push(randomElement);
+    //   shuffleArray.splice(randomElement, shuffleArray[randomIndex + 1]); //have to extract an element out of shuffleArray using randomIndex
+    //   console.log('this is the return Array in the for loop');
+    //   console.log(returnArray);
+    // }
+
+    while (shuffleArray.length >= 1) {
+      var randomElement = Math.floor(Math.random() * shuffleArray.length);
+      returnArray.push(shuffleArray[randomElement]);
+      shuffleArray.splice(randomElement, 1);
+    }
+    
+    return returnArray;
   };
 
 
